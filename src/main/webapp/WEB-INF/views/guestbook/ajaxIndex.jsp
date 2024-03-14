@@ -237,8 +237,8 @@ document.addEventListener("DOMContentLoaded", function(){
 		post
 		*/
 		
+		
 	});
-	
 	
 	
 });//document.addEventListener
