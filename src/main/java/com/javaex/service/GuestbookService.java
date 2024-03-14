@@ -12,7 +12,7 @@ import com.javaex.vo.GuestbookVo;
 public class GuestbookService {
 
 	@Autowired
-	private GuestbookDao guestbookDao;
+	private GuestbookDao guestbookDao; //no비어있음;
 
 	// 등록폼+리스트
 	public List<GuestbookVo> exeAddList() {
@@ -39,20 +39,17 @@ public class GuestbookService {
 		return count;
 	}
 
-	// 방명록 등록 ajax
+	//ajax등록  저장
 	public GuestbookVo exeAddandGuest(GuestbookVo guestbookVo) {
-		System.out.println("GuestService.exeAddandGuest()");
-
-		// 등록
-		int count = guestbookDao.insertSelectKey(guestbookVo);
-
-		// no 의 데이터 가져오기
-		// no값 확인
-		int no = guestbookVo.getNo();
-		// no데이터 가져오기
-
-		GuestbookVo gVo = guestbookDao.guestbookSelectOne(no);
+		System.out.println("GuestbookService.exeAddandGuest()");
+		
+		//저장
+		guestbookDao.insertSelectKey(guestbookVo);
+		
+		//1명데이터 데이터 가져오기
+		GuestbookVo gVo= guestbookDao.guestbookSelectOne(guestbookVo.getNo());
 		return gVo;
 	}
+	
 
 }
