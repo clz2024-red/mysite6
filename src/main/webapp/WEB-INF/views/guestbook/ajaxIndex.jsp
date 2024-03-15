@@ -233,13 +233,24 @@ document.addEventListener("DOMContentLoaded", function(){
 			 let modal = document.querySelector("#myModal");
 			 modal.style.display = "block";
 			 
-			 
 			 //hidden 의 value -> no값 입력
 			 let noTag = document.querySelector('[name="no"]');
 			 noTag.value = event.target.dataset.no;
 			 
+			 //패스워드창 비우기
+			 document.querySelector('.m-password').value="";
+			 
 		 }
 	});
+	
+	//모달창 닫기버튼을 클릭했을때 X표
+	let closeBtn = document.querySelector(".closeBtn");
+	closeBtn.addEventListener("click", function(){
+		let modal = document.querySelector("#myModal");
+		modal.style.display="none";
+	});
+	
+	
 	
 	
 	//모달창에 삭제버튼을 클릭했을때  (진짜삭제)
