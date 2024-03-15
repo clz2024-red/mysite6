@@ -154,87 +154,21 @@ document.addEventListener("DOMContentLoaded", function(){
 	//리스트요청   데이타만 받을거야
 	getListAndRender();
 	
-	
 	//등록버튼 클릭했을때(데이터만 받을거야) //////////////////////////////////////////////
 	let guestForm = document.querySelector("#guestForm");
 	guestForm.addEventListener("submit", addAndRender);
 	
-	
 	//모달창 호출 버튼을 클릭했을때
 	let guestbookListArea = document.querySelector("#guestbookListArea");
-	guestbookListArea.addEventListener("click", function(event){
-		 if(event.target.tagName=="BUTTON"){
-			 
-			 console.log("모달창 보이기");
-			 let modal = document.querySelector("#myModal");
-			 modal.style.display = "block";
-			 
-			 //hidden 의 value -> no값 입력
-			 let noTag = document.querySelector('[name="no"]');
-			 noTag.value = event.target.dataset.no;
-			 
-			 //패스워드창 비우기
-			 let tag =document.querySelector('.m-password');
-			 console.log(tag);
-			 tag.value="";
-		 }
-	});
+	guestbookListArea.addEventListener("click", callMadal);
 	
 	//모달창 닫기버튼을 클릭했을때 X표
 	let closeBtn = document.querySelector(".closeBtn");
-	closeBtn.addEventListener("click", function(){
-		let modal = document.querySelector("#myModal");
-		modal.style.display="none";
-	});
+	closeBtn.addEventListener("click", closeModal);
 	
-
 	//모달창에 삭제버튼을 클릭했을때  (진짜삭제)
 	let btnDelete = document.querySelector('.btnDelete');
-	btnDelete.addEventListener("click", function(){
-		console.log("클릭");
-		
-		let no = document.querySelector('.m-no').value;
-		let password = document.querySelector('.m-password').value;
-		
-		//데이타모으고
-		let guestbookVo = {
-			password: password
-		}
-		console.log(guestbookVo);
-		
-		//서버로 전송
-		axios({
-			method: 'delete', // put, post, delete 
-			url: '/mysite6/api/guestbooks/'+no,  //  /mysite6/api/guestbooks/34
-			headers: {"Content-Type" : "application/json; charset=utf-8"}, //전송타입
-			params: guestbookVo, //파라미터로 값이 전달
-			//data: guestbookVo, //put, post, delete 방식 자동으로 JSON으로 변환 전달
-			
-			responseType: 'json' //수신타입
-		}).then(function (response) {
-			console.log(response); //수신데이타
-			console.log(response.data); //수신데이타
-			
-			
-			if(response.data == 1){
-				//찾아서 삭제
-				let tagid = "#t-" + no;
-				//console.log(tagid);
-				let removeTable= document.querySelector(tagid);
-				//console.log(removeTable);
-				removeTable.remove();
-			}
-			
-			//모달창 닫기
-			let modal = document.querySelector("#myModal");
-			modal.style.display="none";
-			
-		}).catch(function (error) {
-			console.log(error);
-		});
-		
-		
-	});
+	btnDelete.addEventListener("click", deleteAndRemove);
 	
 	
 });//document.addEventListener
@@ -314,9 +248,6 @@ function addAndRender(event){
 }
 
 
-
-
-
 //방명록 글 그리기  /
 function render(guestbookVo, dir){
 	//console.log("render()");
@@ -352,13 +283,81 @@ function render(guestbookVo, dir){
 	}else {
 		console.log("방향체크");
 	}
+		
+}//render
+
+function deleteAndRemove(){
+	console.log("클릭");
 	
+	let no = document.querySelector('.m-no').value;
+	let password = document.querySelector('.m-password').value;
 	
+	//데이타모으고
+	let guestbookVo = {
+		password: password
+	}
+	console.log(guestbookVo);
+	
+	//서버로 전송
+	axios({
+		method: 'delete', // put, post, delete 
+		url: '/mysite6/api/guestbooks/'+no,  //  /mysite6/api/guestbooks/34
+		headers: {"Content-Type" : "application/json; charset=utf-8"}, //전송타입
+		params: guestbookVo, //파라미터로 값이 전달
+		//data: guestbookVo, //put, post, delete 방식 자동으로 JSON으로 변환 전달
+		
+		responseType: 'json' //수신타입
+	}).then(function (response) {
+		console.log(response); //수신데이타
+		console.log(response.data); //수신데이타
+		
+		
+		if(response.data == 1){
+			//찾아서 삭제
+			let tagid = "#t-" + no;
+			//console.log(tagid);
+			let removeTable= document.querySelector(tagid);
+			//console.log(removeTable);
+			removeTable.remove();
+		}
+		
+		//모달창 닫기
+		let modal = document.querySelector("#myModal");
+		modal.style.display="none";
+		
+	}).catch(function (error) {
+		console.log(error);
+	});
 	
 }
 
 
+//모달창 보이기
+function callMadal(event){
+	
+	 if(event.target.tagName=="BUTTON"){
+		 
+		 console.log("모달창 보이기");
+		 let modal = document.querySelector("#myModal");
+		 modal.style.display = "block";
+		 
+		 //hidden 의 value -> no값 입력
+		 let noTag = document.querySelector('[name="no"]');
+		 noTag.value = event.target.dataset.no;
+		 
+		 //패스워드창 비우기
+		 let tag =document.querySelector('.m-password');
+		 console.log(tag);
+		 tag.value="";
+	 }
 
+}
+
+//모달창 숨기기
+function closeModal(){
+	let modal = document.querySelector("#myModal");
+	modal.style.display="none";
+}
 
 </script>
 
