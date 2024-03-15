@@ -241,14 +241,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		 }
 	});
 	
-	//모달창 닫기 버튼 (X) 클릭했을때
-	이벤트잡고
-	//데이타모으고
-	//서버전송
-	//응답받고
-	화면그리고
-	
-	
 	
 	//모달창에 삭제버튼을 클릭했을때  (진짜삭제)
 	let btnDelete = document.querySelector('.btnDelete');
