@@ -13,15 +13,38 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <style>
+	/* 모달창 배경 회색부분 */
 	.modal {
-		display: block;
+		width: 100%; /* 가로전체 */
+		height: 100%; /* 세로전체 */
+		display: none; /* 시작할때 숨김처리 */
+		position: fixed; /* 화면에 고정 */
+		left: 0; /* 왼쪽에서 0에서 시작 */  
+		top: 0;  /* 위쪽에서 0에서 시작 */
+		z-index: 999;  /* 제일위에 */
+		overflow: auto; /* 내용이 많으면 스크롤 생김 */
+		background-color: rgba(0,0,0,0.4); /* 배경이 검정색에 반투명 */  
 	}
 	
+	/* 모달창 내용 흰색부분 */
 	.modal .modal-content{
-		width: 818px;
-		border: 1px solid #000000;
+		width: 400px;
+		margin: 100px auto;  /* 상하 100px, 좌우 가운데 */ 
+		padding: 0px 20px 20px 20px; /* 안쪽여백 */
+		background-color: #ffffff; /* 배경색 흰색 */
+		border: 1px solid #888888; /* 테두리 모양 색 */
 	}
 
+	/* 닫기버튼 */
+	.modal .modal-content .closeBtn{
+		text-align: right;
+		color: #aaaaaa;
+		font-size: 28px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	
+	
 </style>
 </head>
 
@@ -89,6 +112,7 @@
 
 					<!-- 모달 창 컨텐츠 -->
 					<div id="myModal" class="modal">
+						
 						<div id="guestbook" class="modal-content">
 							<div class="closeBtn">×</div>
 							<div class="m-header">패스워드를 입력하세요</div>
@@ -100,6 +124,7 @@
 								<button class="btnDelete" type="button">삭제</button>
 							</div>
 						</div>
+						
 					</div>
 
 					<div id="guestbookListArea">
@@ -170,13 +195,15 @@ document.addEventListener("DOMContentLoaded", function(){
 			password: password,
 			content: content
 		};
+		
+		/* {"name":"황일영", "password": "1234", "content": "안녕하세요"} */
 		//서버로 데이터 전송
 		axios({
 			method: 'post', // put, post, delete 
 			url: '/mysite6/api/guestbooks',
 			headers: {"Content-Type" : "application/json; charset=utf-8"}, //전송타입
-			params: guestVo, //get방식 파라미터로 값이 전달
-			//data: guestbookVo, //put, post, delete 방식 자동으로 JSON으로 변환 전달
+			//params: guestVo, //get방식 파라미터로 값이 전달
+			data: guestVo, //put, post, delete 방식 자동으로 JSON으로 변환 전달
 			
 			responseType: 'json' //수신타입
 		}).then(function (response) {
@@ -194,27 +221,34 @@ document.addEventListener("DOMContentLoaded", function(){
 			console.log(error);
 		});
 		
-		doc
+		
 	});//guestForm.addEventListener
 	
 	//모달창 호출 버튼을 클릭했을때
 	let guestbookListArea = document.querySelector("#guestbookListArea");
 	guestbookListArea.addEventListener("click", function(event){
 		 if(event.target.tagName=="BUTTON"){
-			 /*
+			 
 			 console.log("모달창 보이기");
-			 let modal = document.querySelector(".modal");
+			 let modal = document.querySelector("#myModal");
 			 modal.style.display = "block";
-			 */
+			 
 			 
 			 //hidden 의 value -> no값 입력
 			 let noTag = document.querySelector('[name="no"]');
 			 noTag.value = event.target.dataset.no;
 			 
 		 }
-		
-		 
 	});
+	
+	//모달창 닫기 버튼 (X) 클릭했을때
+	이벤트잡고
+	//데이타모으고
+	//서버전송
+	//응답받고
+	화면그리고
+	
+	
 	
 	//모달창에 삭제버튼을 클릭했을때  (진짜삭제)
 	let btnDelete = document.querySelector('.btnDelete');
@@ -226,16 +260,40 @@ document.addEventListener("DOMContentLoaded", function(){
 		
 		//데이타모으고
 		let guestbookVo = {
-			no: no ,
 			password: password
 		}
+		console.log(guestbookVo);
 		
 		//서버로 전송
-		//
-		/*
-		url /api/guestbooks/delete
-		post
-		*/
+		axios({
+			method: 'delete', // put, post, delete 
+			url: '/mysite6/api/guestbooks/'+no,  //  /mysite6/api/guestbooks/34
+			headers: {"Content-Type" : "application/json; charset=utf-8"}, //전송타입
+			params: guestbookVo, //파라미터로 값이 전달
+			//data: guestbookVo, //put, post, delete 방식 자동으로 JSON으로 변환 전달
+			
+			responseType: 'json' //수신타입
+		}).then(function (response) {
+			console.log(response); //수신데이타
+			console.log(response.data); //수신데이타
+			
+			
+			if(response.data == 1){
+				//찾아서 삭제
+				let tagid = "#t-" + no;
+				//console.log(tagid);
+				let removeTable= document.querySelector(tagid);
+				//console.log(removeTable);
+				removeTable.remove();
+			}
+			
+			//모달창 닫기
+			let modal = document.querySelector("#myModal");
+			modal.style.display="none";
+			
+		}).catch(function (error) {
+			console.log(error);
+		});
 		
 		
 	});
@@ -255,7 +313,7 @@ function render(guestbookVo, dir){
 	let guestbookListArea = document.querySelector("#guestbookListArea");
 	
 	let str = '';
-	str += '<table class="guestRead">';
+	str += '<table id="t-'+guestbookVo.no+'" class="guestRead">';
 	str += '	<colgroup>';
 	str += '		<col style="width: 10%;">';
 	str += '		<col style="width: 40%;">';
