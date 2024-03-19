@@ -57,8 +57,62 @@ public class TboardService {
 		//페이징 계산
 		//////////////////////////////////////////////////
 		
+		//페이지당 버튼 갯수
+		int pgaeBtncount = 5;
+		
+		//전체 글갯수
+		int totalCnt = tboardDao.selectTotalCnt(); ;
+		
+		// 마지막 버튼 번호
+		// 1 ->(1, 5)
+		// 2 ->(1, 5)
+		// 3 ->(1, 5)
+		// 4 ->(1, 5)
+		// 5 ->(1, 5)
+		// 6 ->(6, 10)
+		// 7 ->(6, 10)    .....
+		//10 ->(6, 10)    .....
+		//11 ->(11,15)
+	
+		// 1  5 => 올림(1/5)*5 --> 0.2(1)*5 => 5
+		// 2  5 => 올림(2/5)*5 --> 0.4(1)*5 => 5
+		// 3  5 => 올림(3/5)*5 --> 0.6(1)*5 => 5
+		// 4  5 => 올림(4/5)*5 --> 0.8(1)*5 => 5
+		// 5  5 => 올림(5/5)*5 --> 1.0(1)*5 => 5
+		// 6  5 => 올림(6/5)*5 --> 1.2(2)*5 => 10
+		// 7  5 => 올림(7/5)*5 --> 1.4(2)*5 => 10
+		// 11  5 => 올림(11/5)*5 --> 2.4(3)*5 => 15
+		// 마지막 버튼 번호
+		int endPageBtnNo =  (int)Math.ceil(crtPage/(double)pgaeBtncount)*pgaeBtncount;
+		
+		// 시작 버튼 번호
+		int startPgaeBtnNo = (endPageBtnNo - pgaeBtncount) + 1;
+
+		// 다음 화살표 유무
+		boolean next = false;
+		if(listCnt * endPageBtnNo < totalCnt) { //한페이지당글갯수(10) * 마지막버튼번호(5) < 전체글갯수 102개
+			next = true;
+		}
+		
+		// 이전 화살표 유무
+		boolean prev = false;
+		if(startPgaeBtnNo != 1) {
+			prev = true;
+		}
 		
 		
+		//5개 map으로 묶어서 controller한테 보낸다  리턴해준다
+		Map<String, Object> pMap = new HashMap<String, Object>();
+		pMap.put("boardList", boardList);
+		pMap.put("startPgaeBtnNo", startPgaeBtnNo);
+		pMap.put("endPageBtnNo", endPageBtnNo);
+		pMap.put("prev", prev);
+		pMap.put("next", next);
+	
+		System.out.println(pMap);
+		
+		
+		//밥먹고
 		return boardList;
 	}
 	
