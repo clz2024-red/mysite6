@@ -1,6 +1,7 @@
 package com.javaex.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,12 +28,12 @@ public class TboardController {
 		System.out.println("TboardController.list2()");
 		
 		//boardService를 통해서 리스트를 가져온다
-		List<TboardVo> boardList = tboardService.exeList2(crtPage);
+		Map<String, Object> pMap = tboardService.exeList2(crtPage);
 
 		//모델에 리스트를 담는다(포워드)
-		model.addAttribute("boardList", boardList);
+		model.addAttribute("pMap", pMap);
 		
-		return "tboard/list";
+		return "tboard/list2";
 	}
 	
 	

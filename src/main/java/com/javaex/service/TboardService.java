@@ -17,7 +17,7 @@ public class TboardService {
 	private TboardDao tboardDao;
 	
 	//리스트(검색X, 페이징O)
-	public List<TboardVo> exeList2(int crtPage){
+	public Map<String, Object> exeList2(int crtPage){
 		System.out.println("TboardService.exeList2()");
 		System.out.println(crtPage);
 	
@@ -111,9 +111,8 @@ public class TboardService {
 	
 		System.out.println(pMap);
 		
-		
-		//밥먹고
-		return boardList;
+
+		return pMap;
 	}
 	
 	
